@@ -1,0 +1,10 @@
+# IDEA
+.settings
+*.prefs
+*.iml
+*.ipr
+*.iws
+.idea
+.classpath
+.project
+out/
