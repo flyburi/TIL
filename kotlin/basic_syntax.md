@@ -196,4 +196,173 @@ fun getStringLength(obj: Any): Int? {
 }
 ```
 
-### Using a for loop
+### for loop
+```
+fun main() {
+    val items = listOf("apple", "banana", "kiwifruit")
+    for (item in items) {
+        println(item)
+    }
+}
+```
+
+or for-loop index 사용하기
+```
+fun main() {
+    val items = listOf("apple", "banana", "kiwifruit")
+    for (index in items.indices) {
+        println("item at $index is ${items[index]}")
+    }
+}
+/**
+item at 0 is apple
+item at 1 is banana
+item at 2 is kiwifruit
+**/
+```
+## while loop
+```
+fun main() {
+    val items = listOf("apple", "banana", "kiwifruit")
+    var index = 0
+    while (index < items.size) {
+        println("item at $index is ${items[index]}")
+        index++
+    }
+}
+```
+
+## when expression
+when안에서 is 연산자를 이용하여 type 체크가 가능하다.
+```
+fun describe(obj: Any): String =
+    when (obj) {
+        1          -> "One"
+        "Hello"    -> "Greeting"
+        is Long    -> "Long"
+        !is String -> "Not a string"
+        else       -> "Unknown"
+    }
+
+fun main() {
+    println(describe(1))
+    println(describe("Hello"))
+    println(describe(1000L))
+    println(describe(2))
+    println(describe("other"))
+}
+```
+## Using ranges
+in 연산자로 number 범위를 체크한다.
+```
+//x 가 1..9+1 범위에 있는지 체크
+fun main() {
+    val x = 10
+    val y = 9
+    if (x in 1..y+1) {
+        println("fits in range")
+    }
+}
+```
+
+```
+// 범위를 벗어나는지 체크
+fun main() {
+    val list = listOf("a", "b", "c")
+
+    if (-1 !in 0..list.lastIndex) {
+        println("-1 is out of range")
+    }
+    if (list.size !in list.indices) {
+        println("list size is out of valid list indices range, too")
+    }
+}
+```
+
+```
+//iterating
+fun main() {
+    for (x in 1..5) {
+        print(x)
+    }
+}
+```
+
+downTo와 step을 이용
+```
+fun main() {
+    // step : 2개씩 건너띄기
+    for (x in 1..10 step 2) {
+        print(x) //결과 13579
+    }
+    println()
+    
+    // 9부터 3개씩 내려가기
+    for (x in 9 downTo 0 step 3) {
+        print(x) // 결과 9630
+    }
+}
+```
+
+## collections
+
+in 연산자를 사용해서 object가 collection에 포함되어있는지 확인.
+```
+fun main() {
+    val items = setOf("apple", "banana", "kiwifruit")
+    when {
+        "orange" in items -> println("juicy")
+        "apple" in items -> println("apple is fine too")
+    }
+}
+//결과 apple is fine too
+```
+
+filter, map 을 이용해서 lambda 표현식을 사용.
+```
+val fruits = listOf("banana", "avocado", "apple", "kiwifruit")
+fruits
+  .filter { it.startsWith("a") }
+  .sortedBy { it }
+  .map { it.toUpperCase() }
+  .forEach { println(it) }
+```
+
+## Class 및 instance 생성
+```
+fun main() {
+    val rectangle = Rectangle(5.0, 2.0) // 'new' 키워드가 필요없다.
+    val triangle = Triangle(3.0, 4.0, 5.0)
+    println("Area of rectangle is ${rectangle.calculateArea()}, its perimeter is ${rectangle.perimeter}")
+    println("Area of triangle is ${triangle.calculateArea()}, its perimeter is ${triangle.perimeter}")
+}
+
+abstract class Shape(val sides: List<Double>) {
+    val perimeter: Double get() = sides.sum()
+    abstract fun calculateArea(): Double
+}
+
+interface RectangleProperties {
+    val isSquare: Boolean
+}
+
+class Rectangle(
+    var height: Double,
+    var length: Double
+) : Shape(listOf(height, length, height, length)), RectangleProperties {
+    override val isSquare: Boolean get() = length == height
+    override fun calculateArea(): Double = height * length
+}
+
+class Triangle(
+    var sideA: Double,
+    var sideB: Double,
+    var sideC: Double
+) : Shape(listOf(sideA, sideB, sideC)) {
+    override fun calculateArea(): Double {
+        val s = perimeter / 2
+        return Math.sqrt(s * (s - sideA) * (s - sideB) * (s - sideC))
+    }
+}
+```
+
