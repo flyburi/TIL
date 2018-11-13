@@ -135,7 +135,7 @@ NaN is considered greater than any other element including POSITIVE_INFINITY
 ## Characters
 
 Characters는 Char 타입으로 표현되고 number를 직접 쓸 수 없다.
-```aidl
+```
 fun check(c: Char) {
     if (c == 1) { // ERROR: incompatible types
         // ...
@@ -144,12 +144,149 @@ fun check(c: Char) {
 ```
 Character literals은 홀 따옴표로 감싸줘야한다.
  
-Special characters can be escaped using a backslash. 
-The following escape sequences are supported: \t, \b, \n, \r, \', \", \\ and \$. 
-To encode any other character, use the Unicode escape sequence syntax: '\uFF00'.
+특수 문자는 역슬래쉬를 사용해서 escape 할 수 있다.
+지원하는 escape 문자 : \t, \b, \n, \r, \', \", \\, \$
+다른 문자열 encode 하기 위해서는 unicode를 사용 :'\uFF00'
+
+Character를 Int 타입으로 명시적 형변환하기.
+```
+fun decimalDigitValue(c: Char): Int {
+    if (c !in '0'..'9')
+        throw IllegalArgumentException("Out of range")
+    return c.toInt() - '0'.toInt() // Explicit conversions to numbers
+}
+```
+
+## Booleans
+Boolean은 true, false 두 개의 값을 가진다.
+
+boolean에는 아래와 같은 built-in 연산자도 포함한다.
+|| – lazy disjunction
+&& – lazy conjunction
+! - negation
 
 
+## Arrays
+get, set function을 가지는 Array class.
+```
+class Array<T> private constructor() {
+    val size: Int
+    operator fun get(index: Int): T
+    operator fun set(index: Int, value: T): Unit
 
+    operator fun iterator(): Iterator<T>
+    // ...
+}
+```
 
+array를 생성하기 위해, arrayOf() function을 사용하고 arrayOf(1,2,3) 처럼 값을 전달하면,
+array [1,2,3] 이 생성이 된다. 
+아니면 arrayOfNulls()를 이용하여 null element로 채워진 array를 생성할 수도 있다.
 
+또, Array 생성자를 이용해서 array size와 function을 받는 생성자를 사용해서 
+각 index 별로 array element의 값을 초기화한 후 return 할수도 있다.
+
+```
+fun main() {
+    // Creates an Array<String> with values ["0", "1", "4", "9", "16"]
+    val asc = Array(5, { i -> (i * i).toString() })
+    asc.forEach { println(it) }
+}
+/* return */
+/* 
+0
+1
+4
+9
+16
+*/
+```
+[] 연산자는 function의 member인 get(), set()을 호출한다.
+
+Note:
+자바와 다르게 Kotlin에서 array는 불변이다.
+이 말은 Kotlin은 Array<String>을 Array<Any>로 할당할 수 없다는 뜻이다.
+
+Kotlin에는 또한 boxing 없이 primitive 타입의 array를 표현할 수 있는 특수한 클래스가 있다.
+ByteArray, ShortArray, IntArray 등등 
+이 클래스트들은 Array 클래스를 상속하지 않았으나 같은 method나 properties 들이 있다. 
+
+```
+val x: IntArray = intArrayOf(1,2,3)
+x[0] = x[1] + x[2]
+
+```
+
+## Unsigned integers
+Kotlin은 unsigned integer 타입을 따른다.
+
+```
+kotlin.UByte: an unsigned 8-bit integer, ranges from 0 to 255
+kotlin.UShort: an unsigned 16-bit integer, ranges from 0 to 65535
+kotlin.UInt: an unsigned 32-bit integer, ranges from 0 to 2^32 - 1
+kotlin.ULong: an unsigned 64-bit integer, ranges from 0 to 2^64 - 1
+```
+
+## Specialized classes
+
+```
+kotlin.UByteArray: an array of unsigned bytes
+kotlin.UShortArray: an array of unsigned shorts
+kotlin.UIntArray: an array of unsigned ints
+kotlin.ULongArray: an array of unsigned longs
+```
+
+UInt와 ULong을 지원하는 range와 progression
+```
+kotlin.ranges.UIntRange, 
+kotlin.ranges.UIntProgression, 
+kotlin.ranges.ULongRange, 
+kotlin.ranges.ULongProgression
+```
+
+## Literals
+unsigned integer를 쉽게 이용하기 위해 kotlin에서는 숫자 리터럴(literal)뒤에 specific unsigned type (Float/Long와 비슷)를 나타낼 수 있도록 제공한다.
+
+u와 U를 뒤에 분이면 unsinged를 나타낸다.  
+타입을 안붙이면 literal의 사이즈에 따라 UInt나 ULong이 제공된다. 
+
+```
+val b: UByte = 1u  // UByte, expected type provided
+val s: UShort = 1u // UShort, expected type provided
+val l: ULong = 1u  // ULong, expected type provided
+
+val a1 = 42u // UInt: no expected type provided, constant fits in UInt
+val a2 = 0xFFFF_FFFF_FFFFu // ULong: no expected type provided, constant doesn't fit in UInt
+```
+
+unsigned long으로 명시적으로 uL, UL 붙여주기
+```
+val a = 1UL // ULong, even though no expected type provided and constant fits into UInt
+```
+
+## Experimental status of unsigned integers
+..(생략. 나중에 필요할 때 보기로.. )..
+
+## Strings
+String은 불변.
+String의 각 element에 접근하기 위해서는 s[i] 처럼 index 연산자로 접근 가능하다.
+```
+fun main() {
+val str = "abcd"
+    for (c in str) {
+        println(c)
+    }
+}
+```
+
++ 연산자를 이용해서 String 값 연결하기(붙이기)
+```
+fun main() {
+    val s = "abc" + 1
+    println(s + "def")
+}
+```
+
+## String Literals
+Kotlin은 string literal 두개의 타입을 가진다.
 
