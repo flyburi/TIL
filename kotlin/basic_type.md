@@ -288,5 +288,112 @@ fun main() {
 ```
 
 ## String Literals
-Kotlin은 string literal 두개의 타입을 가진다.
+Kotlin은 string literal 두개의 타입을 가진다. escaped strings 와 arbitrary text
 
+escaped strings
+```
+val s = "Hello, world!\n"
+```
+그 외.
+\t - Inserts tab
+\b - Inserts backspace
+\n - Inserts newline
+\r - Inserts carriage return
+\' - Inserts single quote character
+\" - Inserts double quote character
+\\ - Inserts backslash
+\$ - Inserts dollar character
+
+triple quote (""")
+```
+val text = """
+    for (c in "foo")
+        print(c)
+"""
+```
+
+trimMargin function을 이용한 whitespace 제거
+```
+val text = """
+    |Tell me and I forget.
+    |Teach me and I remember.
+    |Involve me and I learn.
+    |(Benjamin Franklin)
+    """.trimMargin()
+```
+
+```
+println("Output without using trimMargin function:")
+
+val myString = """
+|Kotlin is interesting.
+|Kotlin is sponsored and developed by JetBrains.
+"""
+println(myString)
+
+println("Output using trimMargin function:\n")
+println(myString.trimMargin())
+
+
+//----------------
+// RESULT
+Output without using trimMargin function:
+
+    |Kotlin is interesting.
+    |Kotlin is sponsored and developed by JetBrains.
+
+Output using trimMargin function:
+
+Kotlin is interesting.
+Kotlin is sponsored and developed by JetBrains.
+
+```
+
+default로 trimMargin은 margin prefix로 | 를 사용하지만, 다른 문자로 변경 가능하다.
+```
+val myString1 = """
+!!! Kotlin is interesting.
+!!! Kotlin is sponsored and developed by JetBrains.
+"""
+println(myString1.trimMargin("!!! "))
+
+println(myString1)
+
+
+//------------------------------
+// RESULT
+Kotlin is interesting.
+Kotlin is sponsored and developed by JetBrains.
+
+    !!! Kotlin is interesting.
+    !!! Kotlin is sponsored and developed by JetBrains.
+``` 
+
+
+## String Templates
+dollar sign ($)을 이용한 템플릿 표현식(template expression)
+```
+fun main() {
+    val i = 10
+    println("i = $i") // prints "i = 10"
+}
+```
+
+curly brace (${ }) 를 이용
+```
+val s = "abc"
+println("$s.length is ${s.length}") // prints "abc.length is 3"
+```
+
+
+Template은 raw string과 escape string을 둘다 지원한다.
+리터럴 $ 를 string 그래로 쓰려면
+```
+val price = """
+${'$'}9.99
+"""
+
+//--------------------------
+// RESULT
+$9.99
+```  
